@@ -21,9 +21,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az account show
-      terraform init
-
+      terraform init -backend=false
 - script: terraform validate
   displayName: 'Terraform Validate'
 
