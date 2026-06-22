@@ -32,4 +32,4 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      terraform plan -var-file="environments/prod.tfvars"
+       terraform plan -var-file="environments/prod.tfvars"
