@@ -10,6 +10,7 @@ module "networking" {
   location            = azurerm_resource_group.rg.location
   environment         = terraform.workspace
 }
+
 module "storage" {
   source = "./modules/storage"
 
@@ -17,6 +18,7 @@ module "storage" {
   location            = azurerm_resource_group.rg.location
   environment         = terraform.workspace
 }
+
 module "security" {
   source = "./modules/security"
 
@@ -24,6 +26,7 @@ module "security" {
   location            = azurerm_resource_group.rg.location
   environment         = terraform.workspace
 }
+
 module "compute" {
   source = "./modules/compute"
 
