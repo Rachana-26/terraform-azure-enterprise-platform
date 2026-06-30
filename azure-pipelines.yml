@@ -13,13 +13,13 @@ steps:
       terraform version
     displayName: "Install Terraform"
 
- - task: AzureCLI@2
-  displayName: 'Terraform Init'
-  inputs:
-    azureSubscription: 'new azure connectionn'
+  - task: AzureCLI@2
+    displayName: "Terraform Init"
+    inputs:
+    azureSubscription: "new azure connectionn"
     addSpnToEnvironment: true
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
+    scriptType: "bash"
+    scriptLocation: "inlineScript"
     inlineScript: |
       export ARM_USE_OIDC=true
       export ARM_USE_AZUREAD=true
@@ -29,12 +29,12 @@ steps:
     displayName: "Terraform Validate"
 
   - task: AzureCLI@2
-  displayName: 'Terraform Plan'
-  inputs:
-    azureSubscription: 'new azure connectionn'
+    displayName: "Terraform Plan"
+    inputs:
+    azureSubscription: "new azure connectionn"
     addSpnToEnvironment: true
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
+    scriptType: "bash"
+    scriptLocation: "inlineScript"
     inlineScript: |
       export ARM_USE_OIDC=true
       export ARM_USE_AZUREAD=true
