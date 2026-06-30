@@ -16,7 +16,7 @@ steps:
   - task: AzureCLI@2
     displayName: "Terraform Init"
     inputs:
-      azureSubscription: "terraform-azure-connection"
+      azureSubscription: "new azure connectionn"
       addSpnToEnvironment: true
       scriptType: "bash"
       scriptLocation: "inlineScript"
@@ -29,7 +29,7 @@ steps:
   - task: AzureCLI@2
     displayName: "Terraform Plan"
     inputs:
-      azureSubscription: "terraform-azure-connection"
+      azureSubscription: "new azure connectionn"
       addSpnToEnvironment: true
       scriptType: "bash"
       scriptLocation: "inlineScript"
