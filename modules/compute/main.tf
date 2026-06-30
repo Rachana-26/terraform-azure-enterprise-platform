@@ -19,19 +19,24 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
+
   name                = "${var.environment}-vm"
   resource_group_name = var.resource_group_name
   location            = var.location
-  size                = "Standard_D2ls_v5"
+
+  size = "Standard_D2ls_v5"
 
   admin_username = "azureuser"
 
   disable_password_authentication = false
-  admin_password                  = "Password@123456"
+
+  admin_password = "Password@123456"
 
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
+
+  custom_data = base64encode(file("${path.root}/scripts/install-docker.sh"))
 
   os_disk {
     caching              = "ReadWrite"
@@ -45,4 +50,3 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "latest"
   }
 }
-
