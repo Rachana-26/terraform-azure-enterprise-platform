@@ -17,10 +17,12 @@ steps:
     displayName: "Terraform Init"
     inputs:
       azureSubscription: "terraform-azure-connection"
+      addSpnToEnvironment: true
       scriptType: "bash"
       scriptLocation: "inlineScript"
       inlineScript: |
         terraform init
+
   - script: terraform validate
     displayName: "Terraform Validate"
 
@@ -28,9 +30,8 @@ steps:
     displayName: "Terraform Plan"
     inputs:
       azureSubscription: "terraform-azure-connection"
+      addSpnToEnvironment: true
       scriptType: "bash"
       scriptLocation: "inlineScript"
       inlineScript: |
-        terraform plan \
-         -var-file="environments/prod.tfvars" \
-         -out=tfplan
+        terraform plan -var-file="environments/prod.tfvars"
