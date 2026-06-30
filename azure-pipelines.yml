@@ -1,35 +1,36 @@
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
+  - script: |
+      echo "Installing Terraform..."
+      wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
+      unzip terraform_1.9.8_linux_amd64.zip
+      sudo mv terraform /usr/local/bin/
+      terraform version
+    displayName: "Install Terraform"
 
-- script: |
-    echo "Installing Terraform..."
-    wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
-    unzip terraform_1.9.8_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
-    terraform version
-  displayName: 'Install Terraform'
+  - task: AzureCLI@2
+    displayName: "Terraform Init"
+    inputs:
+      azureSubscription: "terraform-azure-connection"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        terraform init
+  - script: terraform validate
+    displayName: "Terraform Validate"
 
-- task: AzureCLI@2
-  displayName: 'Terraform Init'
-  inputs:
-    azureSubscription: 'terraform-azure-connection'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      terraform init -backend=false
-- script: terraform validate
-  displayName: 'Terraform Validate'
-
-- task: AzureCLI@2
-  displayName: 'Terraform Plan'
-  inputs:
-    azureSubscription: 'terraform-azure-connection'
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-       terraform plan -var-file="environments/prod.tfvars"
+  - task: AzureCLI@2
+    displayName: "Terraform Plan"
+    inputs:
+      azureSubscription: "terraform-azure-connection"
+      scriptType: "bash"
+      scriptLocation: "inlineScript"
+      inlineScript: |
+        terraform plan \
+         -var-file="environments/prod.tfvars" \
+         -out=tfplan
