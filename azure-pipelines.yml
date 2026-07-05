@@ -24,6 +24,8 @@ steps:
       addSpnToEnvironment: true
       workingDirectory: "$(System.DefaultWorkingDirectory)"
       inlineScript: |
+        export ARM_USE_OIDC=true
+        export ARM_USE_AZUREAD=true
         terraform init -input=false
 
   - script: |
@@ -45,4 +47,6 @@ steps:
       addSpnToEnvironment: true
       workingDirectory: "$(System.DefaultWorkingDirectory)"
       inlineScript: |
+        export ARM_USE_OIDC=true
+        export ARM_USE_AZUREAD=true
         terraform plan -input=false -var-file="environments/prod.tfvars"
