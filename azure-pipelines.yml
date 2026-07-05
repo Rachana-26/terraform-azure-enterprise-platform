@@ -4,11 +4,13 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
 
+variables:
+  TF_VERSION: "1.9.8"
+
 steps:
   - script: |
-      echo "Installing Terraform..."
-      wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
-      unzip terraform_1.9.8_linux_amd64.zip
+      wget https://releases.hashicorp.com/terraform/$(TF_VERSION)/terraform_$(TF_VERSION)_linux_amd64.zip
+      unzip terraform_$(TF_VERSION)_linux_amd64.zip
       sudo mv terraform /usr/local/bin/
       terraform version
     displayName: "Install Terraform"
@@ -16,26 +18,31 @@ steps:
   - task: AzureCLI@2
     displayName: "Terraform Init"
     inputs:
-    azureSubscription: "new azure connectionn"
-    addSpnToEnvironment: true
-    scriptType: "bash"
-    scriptLocation: "inlineScript"
-    inlineScript: |
-      export ARM_USE_OIDC=true
-      export ARM_USE_AZUREAD=true
-      terraform init
+      azureSubscription: "new azure connectionn"
+      scriptType: bash
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      workingDirectory: "$(System.DefaultWorkingDirectory)"
+      inlineScript: |
+        terraform init -input=false
 
-  - script: terraform validate
+  - script: |
+      terraform fmt -check -recursive
+    displayName: "Terraform Format Check"
+    workingDirectory: "$(System.DefaultWorkingDirectory)"
+
+  - script: |
+      terraform validate
     displayName: "Terraform Validate"
+    workingDirectory: "$(System.DefaultWorkingDirectory)"
 
   - task: AzureCLI@2
     displayName: "Terraform Plan"
     inputs:
-    azureSubscription: "new azure connectionn"
-    addSpnToEnvironment: true
-    scriptType: "bash"
-    scriptLocation: "inlineScript"
-    inlineScript: |
-      export ARM_USE_OIDC=true
-      export ARM_USE_AZUREAD=true
-      terraform plan -var-file="environments/prod.tfvars"
+      azureSubscription: "new azure connectionn"
+      scriptType: bash
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
+      workingDirectory: "$(System.DefaultWorkingDirectory)"
+      inlineScript: |
+        terraform plan -input=false -var-file="environments/prod.tfvars"

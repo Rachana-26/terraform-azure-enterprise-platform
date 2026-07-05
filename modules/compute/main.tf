@@ -20,7 +20,7 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
 
-  name                = "${var.environment}-vm"
+  name                = var.vm_name
   resource_group_name = var.resource_group_name
   location            = var.location
 
@@ -49,4 +49,19 @@ resource "azurerm_linux_virtual_machine" "vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+identity {
+    type         = "UserAssigned"
+    identity_ids = [var.identity_id]
+  }
+}
+
+resource "azurerm_virtual_machine_extension" "azure_monitor_agent" {
+
+  name                 = "AzureMonitorLinuxAgent"
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "AzureMonitorLinuxAgent"
+  type_handler_version = "1.0"
+
+  auto_upgrade_minor_version = true
 }
